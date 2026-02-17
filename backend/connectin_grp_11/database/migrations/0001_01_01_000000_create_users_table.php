@@ -4,23 +4,32 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->id(); // Ton INT PRIMARY KEY
+            // la clé primaire 'id' (INT AUTO_INCREMENT)
+            $table->id()->primary();
+            // nom de famille (VARCHAR 30)
             $table->string('last_name', 30);
+            // prénom (VARCHAR 30)
             $table->string('first_name', 30);
+            // adresse mail (VARCHAR 50) unique
             $table->string('mail', 50)->unique();
+            // date de naissance (DATE)
             $table->date('birthdate');
+            // mot de passe (VARCHAR 255)
             $table->string('password');
+            // photo de profil en blob
             $table->binary('profil_pic')->nullable();
+            // rôle (INT) 0 pour utilisateur,1 pour modérateur, 2 pour admin
             $table->integer('role');
+            // token de réinitialisation de mot de passe
             $table->rememberToken();
+            // Laravel gère created_at et updated_at
             $table->timestamps();
         });
 
