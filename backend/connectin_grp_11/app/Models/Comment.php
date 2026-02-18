@@ -7,7 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 class Comment extends Model
 {
     // On autorise le remplissage de ces colonnes
-    protected $fillable = ['message', 'post_id', 'user_id'];
+    protected $fillable = [
+        'message',
+        'post_id', 
+        'user_id'
+        ];
 
     // Relation : Un commentaire appartient à un utilisateur
     public function user()

@@ -31,9 +31,9 @@ class Post extends Model
         return $this->hasMany(Comment::class);
     }
     public function likers(): BelongsToMany
-{
-    return $this->belongsToMany(User::class, 'liked', 'post_id', 'user_id')
-                ->withTimestamps()
-                ->updatedAt(null);
-}
+    {
+        return $this->belongsToMany(User::class, 'liked', 'post_id', 'user_id')
+            ->withTimestamps()
+            ->updatedAt(null);
+    }
 }

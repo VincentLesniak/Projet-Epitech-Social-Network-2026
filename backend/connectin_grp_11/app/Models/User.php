@@ -43,6 +43,7 @@ class User extends Authenticatable
      *
      * @return array<string, string>
      */
+    // On indique que 'password' doit être automatiquement haché et que 'email_verified_at' est une datetime
     protected function casts(): array
     {
         return [
@@ -50,10 +51,11 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+    // Relation Many-to-Many avec les Groupes via la table 'user_groups'
     public function likedPosts(): BelongsToMany
-{
-    return $this->belongsToMany(Post::class, 'liked', 'user_id', 'post_id')
-                ->withTimestamps()
-                ->updatedAt(null);
-}
+    {
+        return $this->belongsToMany(Post::class, 'liked', 'user_id', 'post_id')
+            ->withTimestamps()
+            ->updatedAt(null);
+    }
 }

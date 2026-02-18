@@ -11,33 +11,26 @@ class Group extends Model
 {
     use HasFactory;
 
-    // 1. Configuration de la clé primaire (très important pour ton SQL)
-    protected $primaryKey = 'group_name'; // Ta clé est 'group_name' au lieu de 'id'
-    public $incrementing = false;        // Ce n'est pas un nombre auto-incrémenté
-    protected $keyType = 'string';       // C'est un VARCHAR (string)
+    // Configuration de la clé primaire 
+    protected $primaryKey = 'group_name';
+    public $incrementing = false;
+    protected $keyType = 'string';
 
-    // 2. Champs autorisés à l'écriture
+    // Les colonnes autorisées pour le remplissage en masse
     protected $fillable = [
         'group_name',
         'banner',
         'description',
     ];
-
-    /**
-     * Un groupe contient plusieurs posts.
-     * On précise les colonnes car on ne suit pas la convention 'id'.
-     */
+    // Indique que un groupe peut avoir plusieurs posts
     public function posts(): HasMany
     {
         return $this->hasMany(Post::class, 'group_id', 'group_name');
     }
-
-    /**
-     * Relation Many-to-Many avec les Utilisateurs via la table 'user_groups'.
-     */
+    // Indique que un groupe peut avoir plusieurs utilisateurs et qu'un utilisateur peut appartenir à plusieurs groupes
     public function users(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'user_groups', 'group_id', 'user_id')
-                    ->withTimestamps(); // Ton SQL contient created_at/updated_at sur la pivot
+            ->withTimestamps(); // Ton SQL contient created_at/updated_at sur la pivot
     }
 }
