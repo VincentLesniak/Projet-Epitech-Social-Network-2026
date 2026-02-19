@@ -6,6 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class User extends Authenticatable
 {
@@ -18,9 +19,13 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
-        'name',
-        'email',
+        'last_name',
+        'first_name',
+        'mail',
+        'birthdate',
         'password',
+        'role',
+        'profil_pic',
     ];
 
     /**
@@ -38,11 +43,19 @@ class User extends Authenticatable
      *
      * @return array<string, string>
      */
+    // On indique que 'password' doit être automatiquement haché et que 'email_verified_at' est une datetime
     protected function casts(): array
     {
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+    // Relation Many-to-Many avec les Groupes via la table 'user_groups'
+    public function likedPosts(): BelongsToMany
+    {
+        return $this->belongsToMany(Post::class, 'liked', 'user_id', 'post_id')
+            ->withTimestamps()
+            ->updatedAt(null);
     }
 }
