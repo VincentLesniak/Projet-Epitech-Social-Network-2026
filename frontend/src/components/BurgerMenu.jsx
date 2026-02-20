@@ -1,24 +1,39 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 const BurgerMenu = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
     <nav>
-      <button onClick={() => setIsOpen(!isOpen)}>
-        {isOpen ? "Fermer X" : "Menu ☰"}
-      </button>
+      <button onClick={() => setIsOpen(!isOpen)}>{isOpen ? "X" : "☰"}</button>
 
       {isOpen && (
-        <ul>
+        <ul className="absolute inset-x-1 w-full h-full">
           <li>
-            <a href="#">Lien 1</a>
+            <Link to="/Home">
+              <button type="button">Fil d'actualité</button>
+            </Link>
           </li>
           <li>
-            <a href="#">Lien 2</a>
+            <Link to="/profil">
+              <button type="button">Profil</button>
+            </Link>
           </li>
           <li>
-            <a href="#">Lien 3</a>
+            <ul>
+              <li>
+                <Link to="/groups">
+                  <button type="button">Groupe</button>
+                </Link>
+                <Link to="/groups">
+                  <button type="button">Groupe</button>
+                </Link>
+                <Link to="/groups">
+                  <button type="button">Groupe</button>
+                </Link>
+              </li>
+            </ul>
           </li>
         </ul>
       )}

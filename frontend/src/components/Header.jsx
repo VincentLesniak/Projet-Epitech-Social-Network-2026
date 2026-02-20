@@ -3,7 +3,7 @@ import BurgerMenu from "./BurgerMenu";
 
 const Header = () => {
   return (
-    <header className="flex flex-row justify-center items-center">
+    <header className="flex flex-row items-center justify-between">
       <Title />
       <BurgerMenu />
     </header>
