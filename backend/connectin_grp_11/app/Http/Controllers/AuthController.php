@@ -6,11 +6,9 @@ use App\Models\User;
 use App\Http\Requests\RegisterRequest;
 use Illuminate\Http\Request;
 
-class AuthController extends Controller
-{
+class AuthController extends Controller {
 
-    public function register(RegisterRequest $request)
-    {
+    public function register(RegisterRequest $request) {
 
         $validatedData = $request->validated();
 
