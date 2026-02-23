@@ -1,6 +1,6 @@
 <?php
-use App\Http\Controllers\AuthController;
 use Illuminate\Http\Request;
+use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LikeController;
 
@@ -8,7 +8,14 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 #region Auth
-Route::post('/register', [AuthController::class,'register']);
+
+
+// Le groupe protégé par "auth:sanctum", tout ce qui se fait avec la nécessité d'être connécté se fait ici
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/register', [AuthController::class,'register']);
+    route::post('/logout', [AuthController::class, 'logout']);
+    Route::post('/login', [AuthController::class, 'login']);
+});
 #endregion
 #region post(table)
 // route pour liké un post

@@ -7,33 +7,54 @@ const BurgerMenu = () => {
   const closeMenu = () => setIsOpen(false);
 
   return (
-    <nav>
-      <button onClick={() => setIsOpen(!isOpen)}>{isOpen ? "X" : "☰"}</button>
+    <nav className="relative">
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-slate-100 transition-colors text-slate-700 font-bold text-xl"
+      >
+        {isOpen ? "✕" : "☰"}
+      </button>
 
       {isOpen && (
-        <ul className="absolute right-0 top-full z-10 w-full bg-white">
-          <li>
-            <Link to="/Actuality" onClick={closeMenu}>
-              <button type="button">Fil d'actualité</button>
-            </Link>
+        <ul className="absolute right-0 top-full mt-2 w-64 bg-white border border-slate-100 shadow-2xl rounded-2xl py-3 z-50 overflow-hidden">
+          <li className="px-3 py-1 text-xs font-semibold text-slate-400 uppercase tracking-wider">
+            Navigation
           </li>
-          <li>
-            <Link to="/profil" onClick={closeMenu}>
-              <button type="button">Profil</button>
-            </Link>
-          </li>
-          <li>
-            <Link to="/Groupscreate" onClick={closeMenu}>
-              <button type="button">Groupes</button>
-            </Link>
-          </li>
-          <ul>
-            <li>
-              <Link to="/Groupsactuality" onClick={closeMenu}>
-                <button type="button">Epitech</button>
+
+          {[
+            { to: "/Actuality", label: "Fil d'actualité" },
+            { to: "/profil", label: "Profil" },
+            { to: "/Groupscreate", label: "Créer un Groupe" },
+          ].map((item) => (
+            <li key={item.to} className="px-2">
+              <Link to={item.to} onClick={closeMenu} className="group">
+                <button
+                  type="button"
+                  className="w-full text-left px-4 py-2.5 rounded-xl text-slate-700 hover:bg-blue-50 hover:text-blue-600 transition-all duration-200 font-medium"
+                >
+                  {item.label}
+                </button>
               </Link>
             </li>
-          </ul>
+          ))}
+
+          <div className="my-2 border-t border-slate-50"></div>
+
+          <li className="px-3 py-1 text-xs font-semibold text-slate-400 uppercase tracking-wider">
+            Mes Groupes
+          </li>
+
+          <li className="px-2">
+            <Link to="/Groupsactuality" onClick={closeMenu}>
+              <button
+                type="button"
+                className="w-full text-left px-4 py-2.5 rounded-xl text-slate-700 hover:bg-blue-50 hover:text-blue-600 transition-all font-medium flex items-center gap-2"
+              >
+                <span className="w-2 h-2 rounded-full bg-blue-500"></span>
+                Epitech
+              </button>
+            </Link>
+          </li>
         </ul>
       )}
     </nav>
