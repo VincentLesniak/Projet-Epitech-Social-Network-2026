@@ -28,7 +28,7 @@ class PostController extends Controller
      */
     public function create()
     {
-        //
+        //on utilise pas cette méthode car on gère la création de post via une API, pas de formulaire HTML classique
     }
 
     /**
@@ -111,7 +111,20 @@ class PostController extends Controller
      */
     public function update(Request $request, Post $post)
     {
-        //
+        $validated = $request->validate([
+            'message' => 'required|string|max:255',
+            'group_id' => 'nullable|exists:groups,group_name',
+        ]);
+        try {
+            $post->update($validated);
+        } catch (\Exception $e) {
+            Log::error("Erreur mise à jour post : " . $e->getMessage());
+            return response()->json([
+                'message' => 'Une erreur est survenue lors de la mise à jour du post.',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+        return response()->json($post, 200);
     }
 
     /**
@@ -119,6 +132,5 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
-        //
     }
 }
