@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Post;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Storage;
+use DB;
+use Log;
 class PostController extends Controller
 {
     /**
@@ -34,32 +36,58 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
+        // Validation : Le rempart de sécurité
         $validated = $request->validate([
             'message' => 'required|string|max:255',
             'group_id' => 'nullable|exists:groups,group_name',
             'post_picture' => 'nullable|image|max:2048',
         ]);
 
-        // Logique d'upload (si image présente)
-        $imagePath = null;
-        if ($request->hasFile('post_picture')) {
-            $imagePath = $request->file('post_picture')->store('posts', 'public');
+        // Début de la transaction : Tout ou rien
+        DB::beginTransaction();
+
+        try {
+            // Logique de l'image
+            $imagePath = null;
+            if ($request->hasFile('post_picture')) {
+                // On stocke l'image dans storage/app/public/posts
+                $imagePath = $request->file('post_picture')->store('posts', 'public');
+            }
+
+            // Création du Post
+            $post = Post::create([
+                'message' => $validated['message'],
+                'group_id' => $validated['group_id'],
+                'user_id' => auth()->id(), // On prend l'ID de l'utilisateur connecté
+                'post_picture' => $imagePath,
+            ]);
+
+            // Si on arrive ici sans erreur, on valide en base de données
+            DB::commit();
+
+            // On renvoie le post avec son auteur pour React
+            return response()->json([
+                'message' => 'Post créé avec succès !',
+                'data' => $post->load('user:id,first_name,last_name')
+            ], 201);
+
+        } catch (\Exception $e) {
+            // En cas de pépin (erreur SQL, disque plein, etc.), on annule tout
+            DB::rollBack();
+
+            // Si une image a été uploadée avant le crash, on la supprime pour pas polluer le serveur
+            if ($imagePath) {
+                Storage::disk('public')->delete($imagePath);
+            }
+
+            Log::error("Erreur création post : " . $e->getMessage());
+
+            return response()->json([
+                'message' => 'Une erreur est survenue lors de la création du post.',
+                'error' => $e->getMessage()
+            ], 500);
         }
-
-        $post = Post::create([
-            'message' => $validated['message'],
-            'group_id' => $validated['group_id'],
-            'user_id' => auth()->id(),
-            'post_picture' => $imagePath, // On stocke le chemin
-        ]);
-
-        // Réponse en json avec le post créé
-        return response()->json([
-            'message' => 'Post créé avec succès !',
-            'data' => $post
-        ], 201);
     }
-
     /**
      * Display the specified resource.
      */
