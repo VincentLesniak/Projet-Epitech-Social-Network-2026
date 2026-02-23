@@ -17,5 +17,7 @@ Route::post('/posts/{post}/like', [LikeController::class, 'toggle'])->middleware
 Route::get('posts', [\App\Http\Controllers\PostController::class, 'index']);
 // route pour créer un post
 Route::post('posts', [\App\Http\Controllers\PostController::class, 'store'])->middleware('auth:sanctum');
+// montre un post spécifique
+Route::get('posts/{post}', [\App\Http\Controllers\PostController::class, 'show']);
 #endregion
 
