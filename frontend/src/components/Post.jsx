@@ -7,7 +7,16 @@ const Post = ({ data }) => {
 
   return (
     <article>
-      <p>{data.content}</p>
+      <div className="flex flex-row gap-4">
+        <img src="https://placehold.co/50" alt="Photo de profil" />
+        <p>Nom d'utilisateur</p>
+      </div>
+      <p>
+        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Molestias,
+        nemo molestiae doloremque debitis labore error asperiores libero veniam,
+        officia, ducimus nulla voluptatem repellendus animi necessitatibus
+        architecto dolor modi dolorem vero.
+      </p>
 
       <button onClick={() => setShowComments(!showComments)}>
         {showComments ? "Masquer les commentaires" : "Voir les commentaires"}
