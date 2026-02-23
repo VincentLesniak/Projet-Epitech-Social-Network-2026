@@ -7,5 +7,15 @@ use App\Http\Controllers\LikeController;
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
-Route::post('/posts/{post}/like', [LikeController::class, 'toggle'])->middleware('auth:sanctum');
+#region Auth
 Route::post('/register', [AuthController::class,'register']);
+#endregion
+#region post(table)
+// route pour liké un post
+Route::post('/posts/{post}/like', [LikeController::class, 'toggle'])->middleware('auth:sanctum');
+// route pour récupérer les posts
+Route::get('posts', [\App\Http\Controllers\PostController::class, 'index']);
+// route pour créer un post
+Route::post('posts', [\App\Http\Controllers\PostController::class, 'store'])->middleware('auth:sanctum');
+#endregion
+
