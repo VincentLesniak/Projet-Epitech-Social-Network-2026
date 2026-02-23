@@ -1,11 +1,13 @@
 <?php
 
 namespace App\Models;
-
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Comment extends Model
 {
+    // On indique que ce modèle utilise les factories pour les tests et le seeding
+    use HasFactory;
     // On autorise le remplissage de ces colonnes
     protected $fillable = [
         'message',
