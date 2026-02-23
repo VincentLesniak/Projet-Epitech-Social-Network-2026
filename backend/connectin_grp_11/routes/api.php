@@ -21,5 +21,7 @@ Route::post('posts', [\App\Http\Controllers\PostController::class, 'store'])->mi
 Route::get('posts/{post}', [\App\Http\Controllers\PostController::class, 'show']);
 //update un post
 Route::put('posts/{post}', [\App\Http\Controllers\PostController::class, 'update'])->middleware('auth:sanctum');
+//delete un post
+Route::delete('posts/{post}', [\App\Http\Controllers\PostController::class, 'destroy'])->middleware('auth:sanctum');
 #endregion
 
