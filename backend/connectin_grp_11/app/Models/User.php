@@ -52,6 +52,12 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+    public function groups(): BelongsToMany
+    {
+        // On précise : Table pivot, clé étrangère locale, clé étrangère distante
+        return $this->belongsToMany(Group::class, 'user_groups', 'user_id', 'group_id')
+                    ->withTimestamps();
+    }
     // Relation Many-to-Many avec les Groupes via la table 'user_groups'
     public function likedPosts(): BelongsToMany
     {
