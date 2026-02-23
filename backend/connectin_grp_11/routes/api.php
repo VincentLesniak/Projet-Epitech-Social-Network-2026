@@ -19,5 +19,7 @@ Route::get('posts', [\App\Http\Controllers\PostController::class, 'index']);
 Route::post('posts', [\App\Http\Controllers\PostController::class, 'store'])->middleware('auth:sanctum');
 // montre un post spécifique
 Route::get('posts/{post}', [\App\Http\Controllers\PostController::class, 'show']);
+//update un post
+Route::put('posts/{post}', [\App\Http\Controllers\PostController::class, 'update'])->middleware('auth:sanctum');
 #endregion
 
