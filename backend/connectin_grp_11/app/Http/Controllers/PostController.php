@@ -93,7 +93,9 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
-        //
+        $post = $post->load('user:id,first_name,last_name')
+            ->loadCount('likers');
+        return response()->json($post);
     }
 
     /**
