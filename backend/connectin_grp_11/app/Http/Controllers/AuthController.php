@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Http\Requests\RegisterRequest;
 use App\Http\Requests\LoginRequest;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller {
@@ -61,6 +62,19 @@ class AuthController extends Controller {
             'message' => 'Connexion réussie !',
             'user'    => $user,
             'token'   => $token
+        ], 200);
+    }
+
+    public function logout(Request $request)
+    {
+        /*On récupère l'utilisateur qui a fait la requête,
+        on cible le Token exact qu'il est en train d'utiliser,
+        et on le supprime de la base de données.*/
+        $request->user()->currentAccessToken()->delete();
+
+        // On renvoie un petit message de confirmation
+        return response()->json([
+            'message' => 'Déconnexion réussie.'
         ], 200);
     }
 }
