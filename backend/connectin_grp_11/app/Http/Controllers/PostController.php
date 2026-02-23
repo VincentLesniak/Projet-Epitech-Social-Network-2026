@@ -132,5 +132,19 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
+        try {
+            // Si le post a une image, on la supprime du stockage
+            if ($post->post_picture) {
+                Storage::disk('public')->delete($post->post_picture);
+            }
+            $post->delete();
+        } catch (\Exception $e) {
+            Log::error("Erreur suppression post : " . $e->getMessage());
+            return response()->json([
+                'message' => 'Une erreur est survenue lors de la suppression du post.',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+        return response()->json(['message' => 'Post supprimé avec succès.'], 200);
     }
 }
