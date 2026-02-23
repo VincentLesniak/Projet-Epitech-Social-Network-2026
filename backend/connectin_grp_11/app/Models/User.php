@@ -55,8 +55,9 @@ class User extends Authenticatable
     // Relation Many-to-Many avec les Groupes via la table 'user_groups'
     public function likedPosts(): BelongsToMany
     {
+        // On indique que cette relation utilise la table 'liked' avec 'user_id' et 'post_id' comme clés étrangères 
+        // (user est récupéré via auth()->user() dans le controller et post via la route model binding)
         return $this->belongsToMany(Post::class, 'liked', 'user_id', 'post_id')
-            ->withTimestamps()
-            ->updatedAt(null);
+            ->withTimestamps();
     }
 }
