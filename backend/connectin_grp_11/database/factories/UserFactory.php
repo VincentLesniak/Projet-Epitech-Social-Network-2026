@@ -29,7 +29,7 @@ class UserFactory extends Factory
             'mail' => fake()->unique()->safeEmail(),
             'birthdate' => fake()->date(),
             'password' => static::$password ??= Hash::make('password'),
-            'role' => 1,
+            'role' => 1, // Par défaut, on peut mettre 1 pour les utilisateurs normaux
         ];
     }
 
