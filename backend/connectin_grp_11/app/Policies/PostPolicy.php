@@ -11,7 +11,7 @@ class PostPolicy
 
     public function before(User $user, string $ability): bool|null
     {
-        // Rôle 0 (Banni) : Interdiction absolue de faire quoi que ce soit
+        // Sécurité anti-banni (au cas où le Middleware serait contourné)
         if ($user->role === 0) {
             return false; 
         }
