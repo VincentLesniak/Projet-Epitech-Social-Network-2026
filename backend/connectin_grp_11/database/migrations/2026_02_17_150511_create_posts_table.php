@@ -15,8 +15,8 @@ return new class extends Migration {
             $table->id();
             // le message (VARCHAR 255)
             $table->string('message', 255);
-            // la photo en blob
-            $table->binary('post_picture')->nullable();
+            // le lien de la photo
+            $table->string('post_picture', 255)->nullable();
             // Relation avec Users (clé étrangère classique)
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             // Relation avec Groups (attention : on pointe vers un string, pas un id !)
