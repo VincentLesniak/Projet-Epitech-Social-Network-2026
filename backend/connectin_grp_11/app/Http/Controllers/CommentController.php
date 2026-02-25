@@ -30,7 +30,7 @@ class CommentController extends Controller
     {
         // Validation : On s'assure que le message est présent et que le post existe
         $validated = $request->validate([
-            'message' => 'required|string|max:500',
+            'message' => 'required|string|max:255',
             'post_id' => 'required|exists:posts,id',
         ]);
 
@@ -54,7 +54,7 @@ class CommentController extends Controller
             return response()->json([
                 'message' => 'Une erreur est survenue lors de l\'ajout du commentaire.',
                 'error' => $e->getMessage()
-            ], 500);
+            ], );
         }
     }
 
@@ -74,7 +74,7 @@ class CommentController extends Controller
     {
         // 1. Validation : On ne permet de modifier que le message
         $validated = $request->validate([
-            'message' => 'required|string|max:500',
+            'message' => 'required|string|max:255',
         ]);
 
         // Vérification de sécurité (optionnelle mais recommandée) : 
