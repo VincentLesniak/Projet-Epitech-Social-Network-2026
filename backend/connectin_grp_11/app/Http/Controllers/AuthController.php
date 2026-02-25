@@ -21,7 +21,7 @@ class AuthController extends Controller {
             'mail'       => $validatedData['mail'],
             'birthdate'  => $validatedData['birthdate'],
             'password'   => $validatedData['password'],
-            'role'       => 1,
+            'role'       => 0, // Par défaut, on attribue le rôle "Utilisateur" (0)
         ]);
 
        
