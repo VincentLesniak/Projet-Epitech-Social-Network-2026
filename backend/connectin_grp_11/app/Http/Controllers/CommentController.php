@@ -45,7 +45,7 @@ class CommentController extends Controller
             // On renvoie le commentaire avec les infos de son auteur pour React
             return response()->json([
                 'message' => 'Commentaire ajouté avec succès !',
-                'data' => $comment->load('user:id,first_name,last_name')
+                'data' => $comment->load('user:id,first_name,last_name,profil_pic')
             ], 201);
 
         } catch (\Exception $e) {
@@ -90,7 +90,7 @@ class CommentController extends Controller
             
             return response()->json([
                 'message' => 'Commentaire mis à jour.',
-                'data' => $comment->load('user:id,first_name,last_name')
+                'data' => $comment->load('user:id,first_name,last_name,profil_pic')
             ], 200);
 
         } catch (\Exception $e) {
