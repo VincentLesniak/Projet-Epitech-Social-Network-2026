@@ -15,7 +15,7 @@ class PostController extends Controller
     public function index()
     {
         // On récupère les posts avec l'utilisateur et on compte les likes
-        $posts = Post::with('user:id,first_name,last_name') // On ne prend que les colonnes nécessaires
+        $posts = Post::with('user:id,first_name,last_name,profil_pic') // On ne prend que les colonnes nécessaires
             ->withCount('likers')
             ->latest() // Les plus récents en premier
             ->get();
@@ -68,7 +68,7 @@ class PostController extends Controller
             // On renvoie le post avec son auteur pour React
             return response()->json([
                 'message' => 'Post créé avec succès !',
-                'data' => $post->load('user:id,first_name,last_name')
+                'data' => $post->load('user:id,first_name,last_name,profil_pic')
             ], 201);
 
         } catch (\Exception $e) {
@@ -93,7 +93,7 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
-        $post = $post->load('user:id,first_name,last_name')
+        $post = $post->load('user:id,first_name,last_name,profil_pic')
             ->loadCount('likers');
         return response()->json($post);
     }
