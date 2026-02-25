@@ -14,7 +14,7 @@ Route::post('/login', [AuthController::class, 'login']);
 
 // Le groupe protégé par "auth:sanctum", tout ce qui se fait avec la nécessité d'être connécté se fait ici
 Route::middleware('auth:sanctum')->group(function () {
-    route::post('/logout', [AuthController::class, 'logout']);
+    Route::post('/logout', [AuthController::class, 'logout']);
 });
 #endregion
 
@@ -35,7 +35,21 @@ Route::get('posts', [\App\Http\Controllers\PostController::class, 'index']);
 
 // montre un post spécifique
 Route::get('posts/{post}', [\App\Http\Controllers\PostController::class, 'show']);
-
-
 #endregion
 
+#region comments
+Route::middleware('auth:sanctum')->group(function () {
+    // route pour créer un commentaire
+    Route::post('comments', [\App\Http\Controllers\CommentController::class, 'store']);
+    // update un commentaire
+    Route::put('comments/{comment}', [\App\Http\Controllers\CommentController::class, 'update']);
+    // delete un commentaire
+    Route::delete('comments/{comment}', [\App\Http\Controllers\CommentController::class, 'destroy']);
+});
+
+// route pour récupérer les commentaires
+Route::get('comments', [\App\Http\Controllers\CommentController::class, 'index']);
+
+// montre un commentaire spécifique
+Route::get('comments/{comment}', [\App\Http\Controllers\CommentController::class, 'show']);
+#endregion
