@@ -16,7 +16,7 @@ class CommentController extends Controller
     public function index()
     {
         // On récupère les commentaires avec l'auteur et le post associé
-        $comments = Comment::with(['user:id,first_name,last_name', 'post:id'])
+        $comments = Comment::with(['user:id,first_name,last_name,profil_pic', 'post:id'])
             ->latest() // Les plus récents en premier
             ->get();
 
@@ -63,7 +63,7 @@ class CommentController extends Controller
      */
     public function show(Comment $comment)
     {
-        $comment = $comment->load(['user:id,first_name,last_name', 'post:id']);
+        $comment = $comment->load(['user:id,first_name,last_name,profil_pic', 'post:id']);
         return response()->json($comment);
     }
 
