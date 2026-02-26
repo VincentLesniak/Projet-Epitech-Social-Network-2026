@@ -3,6 +3,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LikeController;
+use App\Http\Middleware\CheckBanned;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -19,7 +20,7 @@ Route::middleware('auth:sanctum')->group(function () {
 #endregion
 
 #region post(table)
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware(['auth:sanctum', CheckBanned::class])->group(function () {
     // route pour liké un post
     Route::post('/posts/{post}/like', [LikeController::class, 'toggle']);
     // route pour créer un post
@@ -38,7 +39,7 @@ Route::get('posts/{post}', [\App\Http\Controllers\PostController::class, 'show']
 #endregion
 
 #region comments
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware(['auth:sanctum', CheckBanned::class])->group(function () {
     // route pour créer un commentaire
     Route::post('comments', [\App\Http\Controllers\CommentController::class, 'store']);
     // update un commentaire

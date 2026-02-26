@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Comment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Gate;
 
 class CommentController extends Controller
 {
@@ -72,7 +73,8 @@ class CommentController extends Controller
      */
     public function update(Request $request, Comment $comment)
     {
-        // 1. Validation : On ne permet de modifier que le message
+        Gate::authorize('update', $comment);
+        // Validation : On ne permet de modifier que le message
         $validated = $request->validate([
             'message' => 'required|string|max:255',
         ]);
@@ -107,14 +109,7 @@ class CommentController extends Controller
      */
     public function destroy(Comment $comment)
     {
-        // Vérification de sécurité (optionnelle mais recommandée) :
-        // S'assurer que seul l'auteur du commentaire (ou un admin/l'auteur du post) peut supprimer
-        /*
-        if (auth()->id() !== $comment->user_id) {
-            return response()->json(['message' => 'Non autorisé.'], 403);
-        }
-        */
-
+       Gate::authorize('delete', $comment);
         try {
             $comment->delete();
             return response()->json(['message' => 'Commentaire supprimé avec succès.'], 200);

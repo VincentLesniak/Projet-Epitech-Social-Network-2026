@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use DB;
 use Log;
+use Illuminate\Support\Facades\Gate;
 class PostController extends Controller
 {
     /**
@@ -110,7 +111,8 @@ class PostController extends Controller
      * Update the specified resource in storage.
      */
     public function update(Request $request, Post $post)
-    {
+    {   
+        Gate::authorize('update', $post);
         $validated = $request->validate([
             'message' => 'required|string|max:255',
             'group_id' => 'nullable|exists:groups,group_name',
@@ -132,6 +134,7 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
+        Gate::authorize('delete', $post);
         try {
             // Si le post a une image, on la supprime du stockage
             if ($post->post_picture) {
