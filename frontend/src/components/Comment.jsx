@@ -1,33 +1,42 @@
 const Comment = () => {
   return (
-    <div className="bg-gray-50 p-4 rounded-lg">
-      <div className="flex flex-row items-center gap-3 mb-2">
-        <img
-          src="https://placehold.co/50"
-          alt="Photo de profil"
-          className="w-8 h-8 rounded-full object-cover"
-        />
-        <p className="text-sm font-semibold text-gray-800">Nom d'utilisateur</p>
-      </div>
+    <div className="flex gap-3 mt-4 group">
+      <img
+        src="https://placehold.co/32"
+        alt="Photo de profil"
+        className="w-8 h-8 rounded-full border border-slate-100 object-cover mt-1"
+      />
 
-      <p className="text-sm text-gray-600 leading-relaxed">
-        Lorem, ipsum dolor sit amet consectetur adipisicing elit. Recusandae
-        delectus animi ipsam voluptates! Cum facilis quibusdam repudiandae amet
-        nulla quos nam vero. Et consequuntur praesentium eaque doloremque ipsam
-        aspernatur ad!
-      </p>
+      <div className="flex flex-col flex-1 gap-1">
+        <div className="bg-slate-100/80 rounded-2xl rounded-tl-none px-4 py-2.5 shadow-sm">
+          <div className="flex justify-between items-center mb-1">
+            <p className="font-bold text-slate-800 text-xs">
+              Nom d'utilisateur
+            </p>
+            <span className="text-[10px] text-slate-400 font-medium">
+              Il y a 1h
+            </span>
+          </div>
+          <p className="text-slate-700 text-sm leading-snug">
+            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Recusandae
+            delectus animi ipsam voluptates!
+          </p>
+        </div>
 
-      <div className="flex flex-row justify-end mt-2">
-        <button
-          className="hover:opacity-70 transition-opacity"
-          aria-label="Aimer ce commentaire"
-        >
-          <img
-            src="https://placehold.co/20"
-            alt="Like"
-            className="w-4 h-4 grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all"
-          />
-        </button>
+        <div className="flex flex-row justify-start pl-2">
+          <button className="flex items-center gap-1.5 group/like">
+            <div className="p-1.5 rounded-full group-hover/like:bg-pink-50 transition-colors">
+              <img
+                src="https://placehold.co/20"
+                alt="Like"
+                className="opacity-40 group-hover/like:opacity-100 transition-opacity"
+              />
+            </div>
+            <span className="text-xs text-slate-400 group-hover/like:text-pink-500 font-semibold transition-colors">
+              12
+            </span>
+          </button>
+        </div>
       </div>
     </div>
   );

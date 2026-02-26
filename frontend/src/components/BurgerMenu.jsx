@@ -15,49 +15,52 @@ const BurgerMenu = () => {
     <nav className="relative">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="p-2 text-gray-600 hover:text-blue-600 focus:outline-none transition-colors"
-        aria-label="Menu"
+        className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-slate-100 transition-colors text-slate-700 font-bold text-xl"
       >
-        <span className="text-2xl leading-none">{isOpen ? "✕" : "☰"}</span>
+        {isOpen ? "✕" : "☰"}
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 top-full mt-3 w-56 bg-white border border-gray-100 rounded-lg shadow-lg z-50 overflow-hidden">
-          <ul className="py-2">
-            <li>
-              <Link to="/Actuality" onClick={closeMenu}>
-                <button type="button" className={menuItemClass}>
-                  Fil d'actualité
+        <ul className="absolute right-0 top-full mt-2 w-64 bg-white border border-slate-100 shadow-2xl rounded-2xl py-3 z-50 overflow-hidden">
+          <li className="px-3 py-1 text-xs font-semibold text-slate-400 uppercase tracking-wider">
+            Navigation
+          </li>
+
+          {[
+            { to: "/Actuality", label: "Fil d'actualité" },
+            { to: "/profil", label: "Profil" },
+            { to: "/Groupscreate", label: "Créer un Groupe" },
+          ].map((item) => (
+            <li key={item.to} className="px-2">
+              <Link to={item.to} onClick={closeMenu} className="group">
+                <button
+                  type="button"
+                  className="w-full text-left px-4 py-2.5 rounded-xl text-slate-700 hover:bg-blue-50 hover:text-blue-600 transition-all duration-200 font-medium"
+                >
+                  {item.label}
                 </button>
               </Link>
             </li>
-            <li>
-              <Link to="/profil" onClick={closeMenu}>
-                <button type="button" className={menuItemClass}>
-                  Profil
-                </button>
-              </Link>
-            </li>
-            <li>
-              <Link to="/Groupscreate" onClick={closeMenu}>
-                <button type="button" className={menuItemClass}>
-                  Groupes
-                </button>
-              </Link>
-            </li>
-            <li className="bg-gray-50/50 mt-1 pt-1 border-t border-gray-100">
-              <ul>
-                <li>
-                  <Link to="/Groupsactuality" onClick={closeMenu}>
-                    <button type="button" className={subMenuItemClass}>
-                      <span className="text-gray-400 mr-2">↳</span>Epitech
-                    </button>
-                  </Link>
-                </li>
-              </ul>
-            </li>
-          </ul>
-        </div>
+          ))}
+
+          <div className="my-2 border-t border-slate-50"></div>
+
+          <li className="px-3 py-1 text-xs font-semibold text-slate-400 uppercase tracking-wider">
+            Mes Groupes
+          </li>
+
+          <li className="px-2">
+            <Link to="/Groupsactuality" onClick={closeMenu}>
+              <button
+                type="button"
+                className="w-full text-left px-4 py-2.5 rounded-xl text-slate-700 hover:bg-blue-50 hover:text-blue-600 transition-all font-medium flex items-center gap-2"
+              >
+                <span className="w-2 h-2 rounded-full bg-blue-500"></span>
+                Epitech
+              </button>
+            </Link>
+          </li>
+        </ul>
       )}
     </nav>
   );
