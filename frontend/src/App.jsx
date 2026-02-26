@@ -7,13 +7,15 @@ import Groupsactuality from "./Groupsactuality";
 
 function App() {
   return (
-    <Routes>
-      <Route path="/" element={<Log />} />
-      <Route path="/Profil" element={<Profil />} />
-      <Route path="/Groupscreate" element={<Groupscreate />} />
-      <Route path="/Actuality" element={<Actuality />} />
-      <Route path="/Groupsactuality" element={<Groupsactuality />} />
-    </Routes>
+    <div className="min-h-screen bg-gray-50 text-gray-900 font-sans antialiased">
+      <Routes>
+        <Route path="/" element={<Log />} />
+        <Route path="/Profil" element={<Profil />} />
+        <Route path="/Groupscreate" element={<Groupscreate />} />
+        <Route path="/Actuality" element={<Actuality />} />
+        <Route path="/Groupsactuality" element={<Groupsactuality />} />
+      </Routes>
+    </div>
   );
 }
 
