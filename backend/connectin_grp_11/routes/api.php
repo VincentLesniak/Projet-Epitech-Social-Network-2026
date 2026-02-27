@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LikeController;
 use App\Http\Middleware\CheckBanned;
+use App\Http\Controllers\UserController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -54,3 +55,17 @@ Route::get('comments', [\App\Http\Controllers\CommentController::class, 'index']
 // montre un commentaire spécifique
 Route::get('comments/{comment}', [\App\Http\Controllers\CommentController::class, 'show']);
 #endregion
+
+
+#region Users
+Route::middleware('auth:sanctum')->group(function () {
+    # C
+    Route::get('/users', [UserController::class, 'index']);
+    # R
+    Route::get('/users/{user}', [UserController::class, 'show']);
+    # U
+    Route::put('/users/{user}', [UserController::class, 'update']);
+    # D
+    Route::delete('/users/{user}', [UserController::class, 'destroy']);
+    
+});
