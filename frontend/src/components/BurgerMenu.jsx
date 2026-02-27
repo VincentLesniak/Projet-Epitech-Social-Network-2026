@@ -1,15 +1,22 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const BurgerMenu = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
 
   const closeMenu = () => setIsOpen(false);
 
-  const menuItemClass =
-    "block w-full text-left px-5 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-blue-600 transition-colors";
-  const subMenuItemClass =
-    "block w-full text-left px-9 py-2 text-sm text-gray-500 hover:bg-gray-100 hover:text-blue-600 transition-colors";
+  // --- DÉCONNEXION ---
+  const handleLogout = () => {
+    localStorage.removeItem("ACCESS_TOKEN");
+
+    console.log("Token supprimé, déconnexion en cours...");
+
+    closeMenu();
+
+    navigate("/Log");
+  };
 
   return (
     <nav className="relative">
@@ -59,6 +66,18 @@ const BurgerMenu = () => {
                 Epitech
               </button>
             </Link>
+          </li>
+
+          <div className="my-2 border-t border-slate-100"></div>
+
+          <li className="px-2">
+            <button
+              onClick={handleLogout}
+              type="button"
+              className="w-full text-left px-4 py-2.5 rounded-xl text-red-600 hover:bg-red-50 hover:text-red-700 transition-all duration-200 font-medium flex items-center gap-2"
+            >
+              Déconnexion
+            </button>
           </li>
         </ul>
       )}
