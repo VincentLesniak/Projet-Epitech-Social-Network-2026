@@ -9,29 +9,31 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
-class AuthController extends Controller {
+class AuthController extends Controller
+{
 
-    public function register(RegisterRequest $request) {
+    public function register(RegisterRequest $request)
+    {
 
         $validatedData = $request->validated();
-        
+
 
         $user = User::create([
             'first_name' => $validatedData['first_name'],
             'last_name'  => $validatedData['last_name'],
             'mail'       => $validatedData['mail'],
             'birthdate'  => $validatedData['birthdate'],
-            'password'   => $validatedData['password'],
+            'password'   => Hash::make($validatedData['password']),
             'role'       => 1, // Par défaut, on attribue le rôle "Utilisateur" (1)
         ]);
 
-       
+
         $token = $user->createToken('auth_token')->plainTextToken;
         //La fonction createToken() fabrique un "Objet" PHP complexe. 
         //Le front s'en fiche de PHP, il a juste besoin d'une simple chaîne de caractères (comme 1|abc123def456...) pour la mettre dans le navigateur.
         //Cette propriété extrait le texte brut du jeton pour qu'on puisse l'envoyer facilement sur internet.
 
-        
+
         return response()->json([
             'message' => 'Inscription réussie !',
             'user'    => $user,
@@ -40,7 +42,8 @@ class AuthController extends Controller {
     }
 
 
-    public function login(LoginRequest $request) {
+    public function login(LoginRequest $request)
+    {
         // On récupère le mail et le mot de passe validés dans LoginRequest
         $identification = $request->validated();
 
@@ -51,7 +54,7 @@ class AuthController extends Controller {
         if (!$user || !Hash::check($identification['password'], $user->password)) {
             return response()->json([
                 'message' => 'Les identifiants sont incorrects.'
-            ], 401); 
+            ], 401);
         }
 
         // Est-il banni 

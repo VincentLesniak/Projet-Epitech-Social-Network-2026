@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Title from "./components/Title";
 import Footer from "./components/Footer";
 import api from "./api/axios";
 import { useNotification } from './components/NotificationContext';
@@ -85,7 +84,14 @@ const AuthManager = () => {
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col">
       <header className="p-8 flex justify-center">
-        <Title />
+        <h1 className="select-none tracking-tight">
+          <span className="text-slate-800 font-extrabold text-2xl transition-colors group-hover:text-blue-600">
+            Connect
+          </span>
+          <span className="bg-blue-600 text-white px-1.5 py-0.5 rounded-md text-xl font-bold transition-transform group-hover:scale-105">
+            in
+          </span>
+        </h1>{" "}
       </header>
 
       <main className="flex-1 flex items-center justify-center p-4">

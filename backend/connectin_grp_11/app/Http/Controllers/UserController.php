@@ -8,9 +8,11 @@ use Illuminate\Support\Facades\Gate; // sécurité qui va lire UserPolicy
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Hash;
 
-class UserController extends Controller {
+class UserController extends Controller
+{
 
-    public function index(){
+    public function index()
+    {
         // récupère absolument tous les utilisateurs de la base de données.
         $users = User::all();
 
@@ -21,11 +23,12 @@ class UserController extends Controller {
         ], 200);
     } // utile pour la modale d'invitation dans les groupes et lancer une recherche ciblée, rechercher quelqu'un dans une barre de recherche, etc
 
-    public function show(User $user){
+    public function show(User $user)
+    {
         //(User $user) permet de récupérer la "totalité" des informations de l'utilisateur en utilisant le principe de Route Model Binding
-        
+
         // Gate lit la règle 'view' dans UserPolicy sur le profil $user.
-        Gate::authorize('view', $user); 
+        Gate::authorize('view', $user);
 
         // Si le gate est passé, le code continue ici et le profil trouvé est renvoyé
         return response()->json([
@@ -34,7 +37,8 @@ class UserController extends Controller {
         ], 200);
     }
 
-    public function update(Request $request, User $user){
+    public function update(Request $request, User $user)
+    {
         // On demande à gate de lire la règle 'update' de UserPolicy et de comparer le visiteur avec la cible $user
         // S'ils sont différents, Gate le code s'arrête et le serveur renverra une 403
         Gate::authorize('update', $user);
@@ -43,7 +47,7 @@ class UserController extends Controller {
         $validated = $request->validate([
             'first_name'    => 'sometimes|required|string|max:50',
             'last_name'     => 'sometimes|required|string|max:50',
-            'mail'          => 'sometimes|required|email',
+            'mail'          => 'sometimes|required|email|unique:users,mail,' . $user->id,
             'birthdate'     => 'sometimes|date',
             'profil_pic'    => 'sometimes|image|mimes:jpeg,png,jpg,webp|max:2048',
             'password'      => 'sometimes|nullable|string|min:8'
@@ -53,7 +57,7 @@ class UserController extends Controller {
 
         // Si un fichier "profil_pic" a été envoyé
         if ($request->hasFile('profil_pic')) {
-            
+
             // que l'utilisateur avait déjà une photo, on la supprime du disque
             if ($user->profil_pic) {
                 Storage::disk('public')->delete($user->profil_pic);
@@ -87,7 +91,8 @@ class UserController extends Controller {
         ], 200);
     }
 
-    public function destroy(User $user){
+    public function destroy(User $user)
+    {
         // gate de lit la règle 'delete' de UserPolicy par rapport à la cible $user
         Gate::authorize('delete', $user);
 
@@ -99,8 +104,9 @@ class UserController extends Controller {
         ], 200);
     }
 
-    public function deleteProfilPic(User $user){
-        
+    public function deleteProfilPic(User $user)
+    {
+
         Gate::authorize('update', $user);
 
         if ($user->profil_pic) {
@@ -115,4 +121,3 @@ class UserController extends Controller {
         ], 200);
     }
 }
-
