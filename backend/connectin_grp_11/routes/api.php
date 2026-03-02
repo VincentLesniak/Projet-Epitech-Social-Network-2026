@@ -12,9 +12,10 @@ Route::get('/user', function (Request $request) {
 })->middleware(['auth:sanctum', CheckBanned::class]);
 
 #region Auth
-Route::middleware( CheckBanned::class)->group(function () {
-Route::post('/register', [AuthController::class, 'register']);
-Route::post('/login', [AuthController::class, 'login']);});
+Route::middleware(CheckBanned::class)->group(function () {
+    Route::post('/register', [AuthController::class, 'register']);
+    Route::post('/login', [AuthController::class, 'login']);
+});
 
 
 // Le groupe protégé par "auth:sanctum", tout ce qui se fait avec la nécessité d'être connécté se fait ici
@@ -70,4 +71,6 @@ Route::middleware(['auth:sanctum', CheckBanned::class])->group(function () {
     Route::put('/users/{user}', [UserController::class, 'update']);
     # D
     Route::delete('/users/{user}', [UserController::class, 'destroy']);
+    // suppression de la pdp
+    Route::delete('/users/{user}/profil-pic', [UserController::class, 'deleteProfilPic']);
 });
