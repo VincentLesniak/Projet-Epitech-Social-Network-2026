@@ -1,7 +1,97 @@
+import { useState, useEffect } from "react";
+import axios from "./api/axios";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 
 const Profil = () => {
+  const [formData, setFormData] = useState({
+    first_name: "",
+    last_name: "",
+    mail: "",
+    birthdate: "",
+    password: "",
+  });
+  const [userId, setUserId] = useState(null);
+  const [feedback, setFeedback] = useState({ type: "", message: "" });
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const response = await axios.get("/user");
+        setUserId(response.data.id);
+        setFormData({
+          first_name: response.data.first_name || "",
+          last_name: response.data.last_name || "",
+          mail: response.data.mail || "",
+          birthdate: response.data.birthdate || "",
+          password: "",
+        });
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchUser();
+  }, []);
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setFeedback({ type: "", message: "" });
+
+    const submitData = new FormData();
+    submitData.append("_method", "PUT");
+    submitData.append("first_name", formData.first_name);
+    submitData.append("last_name", formData.last_name);
+    submitData.append("mail", formData.mail);
+    submitData.append("birthdate", formData.birthdate);
+
+    if (formData.password) {
+      submitData.append("password", formData.password);
+    }
+
+    const fileInput = document.getElementById("profil_pic");
+    if (fileInput && fileInput.files[0]) {
+      submitData.append("profil_pic", fileInput.files[0]);
+    }
+
+    try {
+      const response = await axios.post(`/users/${userId}`, submitData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      setFeedback({
+        type: "success",
+        message: response.data.message || "Profil mis à jour avec succès !",
+      });
+      setFormData({ ...formData, password: "" });
+    } catch (error) {
+      if (error.response?.status === 422) {
+        setFeedback({
+          type: "error",
+          message: "Certains champs sont invalides.",
+        });
+      } else if (error.response?.status === 403) {
+        setFeedback({
+          type: "error",
+          message: "Vous n'avez pas l'autorisation de modifier ce profil.",
+        });
+      } else {
+        setFeedback({
+          type: "error",
+          message: "Une erreur serveur est survenue.",
+        });
+      }
+    }
+  };
+
   const inputStyle =
     "w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all text-sm bg-slate-50";
   const labelStyle = "text-[10px] font-bold text-slate-400 uppercase ml-1 mb-1";
@@ -15,7 +105,7 @@ const Profil = () => {
           <div className="h-32 bg-gradient-to-r from-blue-500 to-blue-700"></div>
 
           <div className="px-8 pb-8">
-            <form action="profil" className="flex flex-col">
+            <form onSubmit={handleSubmit} className="flex flex-col">
               <div className="relative flex flex-col items-center -mt-16 mb-8">
                 <div className="relative group">
                   <img
@@ -27,7 +117,12 @@ const Profil = () => {
                     <span className="text-white text-xs font-bold">
                       Changer
                     </span>
-                    <input type="file" className="hidden" />
+                    <input
+                      type="file"
+                      id="profil_pic"
+                      className="hidden"
+                      accept="image/*"
+                    />
                   </label>
                 </div>
                 <h2 className="text-2xl font-extrabold text-slate-800 mt-4">
@@ -38,6 +133,18 @@ const Profil = () => {
                 </p>
               </div>
 
+              {feedback.message && (
+                <div
+                  className={`p-4 mb-6 rounded-xl text-sm font-semibold text-center ${
+                    feedback.type === "success"
+                      ? "bg-green-100 text-green-700"
+                      : "bg-red-100 text-red-700"
+                  }`}
+                >
+                  {feedback.message}
+                </div>
+              )}
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                 <div className="flex flex-col">
                   <label className={labelStyle}>Prénom</label>
@@ -45,26 +152,45 @@ const Profil = () => {
                     type="text"
                     placeholder="Prénom"
                     className={inputStyle}
+                    name="first_name"
+                    value={formData.first_name}
+                    onChange={handleChange}
                   />
                 </div>
                 <div className="flex flex-col">
                   <label className={labelStyle}>Nom</label>
-                  <input type="text" placeholder="Nom" className={inputStyle} />
+                  <input
+                    type="text"
+                    placeholder="Nom"
+                    className={inputStyle}
+                    name="last_name"
+                    value={formData.last_name}
+                    onChange={handleChange}
+                  />
                 </div>
               </div>
 
               <div className="space-y-6">
                 <div className="flex flex-col">
                   <label className={labelStyle}>Date de naissance</label>
-                  <input type="date" className={inputStyle} />
+                  <input
+                    type="date"
+                    className={inputStyle}
+                    name="birthdate"
+                    value={formData.birthdate}
+                    onChange={handleChange}
+                  />
                 </div>
 
                 <div className="flex flex-col">
                   <label className={labelStyle}>Email professionnel</label>
                   <input
-                    type="text"
+                    type="email"
                     placeholder="Email"
                     className={inputStyle}
+                    name="mail"
+                    value={formData.mail}
+                    onChange={handleChange}
                   />
                 </div>
 
@@ -72,8 +198,11 @@ const Profil = () => {
                   <label className={labelStyle}>Mot de passe</label>
                   <input
                     type="password"
-                    placeholder="••••••••"
+                    placeholder="•••••••• (Laisser vide pour ne pas modifier)"
                     className={inputStyle}
+                    name="password"
+                    value={formData.password}
+                    onChange={handleChange}
                   />
                 </div>
               </div>
