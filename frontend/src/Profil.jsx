@@ -8,6 +8,7 @@ const Profil = () => {
     first_name: "",
     last_name: "",
     mail: "",
+    birthdate: "",
   });
   const [userId, setUserId] = useState(null);
 
@@ -23,6 +24,7 @@ const Profil = () => {
           first_name: response.data.first_name || "",
           last_name: response.data.last_name || "",
           mail: response.data.mail || "",
+          birthdate: response.data.birthdate || "",
         });
       } catch (error) {
         console.error("Erreur lors de la récupération de l'utilisateur", error);
@@ -148,7 +150,13 @@ const Profil = () => {
               <div className="space-y-6">
                 <div className="flex flex-col">
                   <label className={labelStyle}>Date de naissance</label>
-                  <input type="date" className={inputStyle} />
+                  <input
+                    type="date"
+                    className={inputStyle}
+                    name="birthdate"
+                    value={formData.birthdate}
+                    onChange={handleChange}
+                  />
                 </div>
 
                 <div className="flex flex-col">

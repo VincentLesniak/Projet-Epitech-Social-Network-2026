@@ -46,7 +46,7 @@ class UserController extends Controller
         $validated = $request->validate([
             'first_name'    => 'sometimes|required|string|max:50',
             'last_name'     => 'sometimes|required|string|max:50',
-            'mail'          => 'sometimes|required|email',
+            'mail'          => 'sometimes|required|email|unique:users,mail,' . $user->id,
             'birthdate'     => 'sometimes|date',
             'profil_pic'    => 'sometimes|image|mimes:jpeg,png,jpg,webp|max:2048'
             // 'sometimes' veut dire : "S'il n'envoie pas de prénom, on garde l'ancien.
