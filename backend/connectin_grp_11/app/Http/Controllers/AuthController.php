@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Http\Requests\RegisterRequest;
 use App\Http\Requests\LoginRequest;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -13,7 +14,7 @@ class AuthController extends Controller {
     public function register(RegisterRequest $request) {
 
         $validatedData = $request->validated();
-
+        
 
         $user = User::create([
             'first_name' => $validatedData['first_name'],
@@ -21,7 +22,7 @@ class AuthController extends Controller {
             'mail'       => $validatedData['mail'],
             'birthdate'  => $validatedData['birthdate'],
             'password'   => $validatedData['password'],
-            'role'       => 0, // Par défaut, on attribue le rôle "Utilisateur" (0)
+            'role'       => 1, // Par défaut, on attribue le rôle "Utilisateur" (1)
         ]);
 
        
@@ -43,21 +44,26 @@ class AuthController extends Controller {
         // On récupère le mail et le mot de passe validés dans LoginRequest
         $identification = $request->validated();
 
-        // On cherche l'utilisateur dans la base de données avec à son mail
+        // On cherche l'utilisateur dans la base de données
         $user = User::where('mail', $identification['mail'])->first();
 
-        // On vérifie si l'utilisateur existe ET si le mot de passe est le bon
-        // Hash::check compare le mot de passe tapé avec celui crypté en BDD
+        // 1. On vérifie si le mot de passe est mauvais
         if (!$user || !Hash::check($identification['password'], $user->password)) {
             return response()->json([
                 'message' => 'Les identifiants sont incorrects.'
-            ], 401); // 401 = Accès refusé
+            ], 401); 
         }
 
-        // si c'est bon on lui crée un Token
+        // Est-il banni 
+        if ($user->role === 0) {
+            return response()->json([
+                'message' => 'Accès refusé. Votre compte a été banni pour non-respect des règles.'
+            ], 403); // 403 = Interdit
+        }
+
+        // Si tout est bon (bon mot de passe ET pas banni), on lui crée un Token
         $token = $user->createToken('auth_token')->plainTextToken;
 
-        // on renvoie au front avec les infos de l'user le token et un message de confirmation et validation par 200 status HTTP
         return response()->json([
             'message' => 'Connexion réussie !',
             'user'    => $user,
