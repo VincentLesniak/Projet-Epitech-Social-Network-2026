@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Storage;
 use DB;
 use Log;
 use Illuminate\Support\Facades\Gate;
+
 class PostController extends Controller
 {
     /**
@@ -15,15 +16,21 @@ class PostController extends Controller
      */
     public function index()
     {
-        // On récupère les posts avec l'utilisateur et on compte les likes
-        $posts = Post::with('user:id,first_name,last_name,profil_pic') // On ne prend que les colonnes nécessaires
+        $userId = auth('sanctum')->id();
+
+        $posts = Post::with([
+            'user:id,first_name,last_name,profil_pic',
+            'comments.user:id,first_name,last_name,profil_pic'
+        ])
             ->withCount('likers')
-            ->latest() // Les plus récents en premier
+            ->withExists(['likers as is_liked_by_user' => function ($query) use ($userId) {
+                $query->where('user_id', $userId);
+            }])
+            ->latest()
             ->get();
 
         return response()->json($posts);
     }
-
     /**
      * Show the form for creating a new resource.
      */
@@ -71,7 +78,6 @@ class PostController extends Controller
                 'message' => 'Post créé avec succès !',
                 'data' => $post->load('user:id,first_name,last_name,profil_pic')
             ], 201);
-
         } catch (\Exception $e) {
             // En cas de pépin (erreur SQL, disque plein, etc.), on annule tout
             DB::rollBack();
@@ -111,7 +117,7 @@ class PostController extends Controller
      * Update the specified resource in storage.
      */
     public function update(Request $request, Post $post)
-    {   
+    {
         Gate::authorize('update', $post);
         $validated = $request->validate([
             'message' => 'required|string|max:255',
