@@ -71,5 +71,4 @@ Route::middleware(['auth:sanctum', CheckBanned::class])->group(function () {
     Route::delete('/users/{user}', [UserController::class, 'destroy']);
     // suppression de la pdp
     Route::delete('/users/{user}/profil-pic', [UserController::class, 'deleteProfilPic']);
-    
 });
