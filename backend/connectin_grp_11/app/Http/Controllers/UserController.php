@@ -6,6 +6,7 @@ use App\Models\User; // le modèle pour parler à la table 'users'
 use Illuminate\Http\Request; // l'outil pour lire ce que React nous envoie
 use Illuminate\Support\Facades\Gate; // sécurité qui va lire UserPolicy
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller {
 
@@ -44,7 +45,8 @@ class UserController extends Controller {
             'last_name'     => 'sometimes|required|string|max:50',
             'mail'          => 'sometimes|required|email',
             'birthdate'     => 'sometimes|date',
-            'profil_pic'    => 'sometimes|image|mimes:jpeg,png,jpg,webp|max:2048'
+            'profil_pic'    => 'sometimes|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'password'      => 'sometimes|nullable|string|min:8'
             // 'sometimes' veut dire : "S'il n'envoie pas de prénom, on garde l'ancien.
             // et obligé de ne pas le laisser vide par le required
         ]);
@@ -62,6 +64,17 @@ class UserController extends Controller {
 
             // puis ajoute ce chemin dans les données à sauvegarder en BDD
             $validated['profil_pic'] = $cheminImage;
+        }
+
+
+        // fonction filled() vérifie si le champ 'password' est présent et n'est pas vide
+        if ($request->filled('password')) {
+            // Quand l'utilisateur a tapé un mot de passe, on le crypte et on remplace le texte en clair dans $validated
+            $validated['password'] = Hash::make($request->password);
+        } else {
+            // autrement si le champ est vide (ou non envoyé), on le retire du tableau $validated 
+            // pour être sûr que Laravel n'écrase pas l'ancien mot de passe
+            unset($validated['password']);
         }
 
         // mise à jour du profil tu Update les données qui sont dans $validated vers $user
