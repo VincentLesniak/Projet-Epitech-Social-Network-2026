@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Title from "./components/Title";
 import Footer from "./components/Footer";
 import api from "./api/axios";
+import { useNotification } from './components/NotificationContext';
 
 const AuthManager = () => {
   const navigate = useNavigate();
