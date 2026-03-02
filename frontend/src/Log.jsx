@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Title from "./components/Title";
 import Footer from "./components/Footer";
 import api from "./api/axios";
+import { useNotification } from './components/NotificationContext';
 
 const AuthManager = () => {
   const navigate = useNavigate();
@@ -23,7 +24,6 @@ const AuthManager = () => {
     "w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl font-bold shadow-lg shadow-blue-200 transition-all active:scale-[0.98] mt-2";
   const btnLink =
     "text-sm text-slate-500 hover:text-blue-600 transition-colors mt-2";
-
   // --- CONNEXION ---
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
