@@ -6,9 +6,11 @@ use App\Models\User; // le modèle pour parler à la table 'users'
 use Illuminate\Http\Request; // l'outil pour lire ce que React nous envoie
 use Illuminate\Support\Facades\Gate; // sécurité qui va lire UserPolicy
 
-class UserController extends Controller {
+class UserController extends Controller
+{
 
-    public function index(){
+    public function index()
+    {
         // récupère absolument tous les utilisateurs de la base de données.
         $users = User::all();
 
@@ -19,11 +21,12 @@ class UserController extends Controller {
         ], 200);
     } // utile pour la modale d'invitation dans les groupes et lancer une recherche ciblée, rechercher quelqu'un dans une barre de recherche, etc
 
-    public function show(User $user){
+    public function show(User $user)
+    {
         //(User $user) permet de récupérer la "totalité" des informations de l'utilisateur en utilisant le principe de Route Model Binding
-        
+
         // Gate lit la règle 'view' dans UserPolicy sur le profil $user.
-        Gate::authorize('view', $user); 
+        Gate::authorize('view', $user);
 
         // Si le gate est passé, le code continue ici et le profil trouvé est renvoyé
         return response()->json([
@@ -32,7 +35,8 @@ class UserController extends Controller {
         ], 200);
     }
 
-    public function update(Request $request, User $user){
+    public function update(Request $request, User $user)
+    {
         // On demande à gate de lire la règle 'update' de UserPolicy et de comparer le visiteur avec la cible $user
         // S'ils sont différents, Gate le code s'arrête et le serveur renverra une 403
         Gate::authorize('update', $user);
@@ -41,6 +45,7 @@ class UserController extends Controller {
         $validated = $request->validate([
             'first_name' => 'sometimes|required|string|max:50',
             'last_name' => 'sometimes|required|string|max:50',
+            'mail' => 'sometimes|required|email|unique:users,mail,' . $user->id,
             // 'sometimes' veut dire : "S'il n'envoie pas de prénom, on garde l'ancien.
             // et obligé de ne pas le laisser vide par le required
         ]);
@@ -55,7 +60,8 @@ class UserController extends Controller {
         ], 200);
     }
 
-    public function destroy(User $user){
+    public function destroy(User $user)
+    {
         // gate de lit la règle 'delete' de UserPolicy par rapport à la cible $user
         Gate::authorize('delete', $user);
 

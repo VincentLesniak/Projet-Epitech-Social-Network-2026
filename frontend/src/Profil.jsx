@@ -7,10 +7,10 @@ const Profil = () => {
   const [formData, setFormData] = useState({
     first_name: "",
     last_name: "",
+    mail: "",
   });
   const [userId, setUserId] = useState(null);
 
-  // NOUVEAU : État pour gérer les messages affichés à l'écran
   const [feedback, setFeedback] = useState({ type: "", message: "" });
 
   useEffect(() => {
@@ -22,6 +22,7 @@ const Profil = () => {
         setFormData({
           first_name: response.data.first_name || "",
           last_name: response.data.last_name || "",
+          mail: response.data.mail || "",
         });
       } catch (error) {
         console.error("Erreur lors de la récupération de l'utilisateur", error);
@@ -33,12 +34,11 @@ const Profil = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setFeedback({ type: "", message: "" }); // On réinitialise les messages au clic
+    setFeedback({ type: "", message: "" });
 
     try {
       const response = await axios.put(`/users/${userId}`, formData);
 
-      // On affiche le message de succès à l'écran
       setFeedback({
         type: "success",
         message: response.data.message || "Profil mis à jour avec succès !",
@@ -108,7 +108,6 @@ const Profil = () => {
                 </p>
               </div>
 
-              {/* NOUVEAU : Affichage des messages de succès ou d'erreur */}
               {feedback.message && (
                 <div
                   className={`p-4 mb-6 rounded-xl text-sm font-semibold text-center ${
@@ -155,9 +154,12 @@ const Profil = () => {
                 <div className="flex flex-col">
                   <label className={labelStyle}>Email professionnel</label>
                   <input
-                    type="text"
+                    type="email"
                     placeholder="Email"
                     className={inputStyle}
+                    name="mail"
+                    value={formData.mail}
+                    onChange={handleChange}
                   />
                 </div>
 
