@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Http\Requests\RegisterRequest;
 use App\Http\Requests\LoginRequest;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -13,7 +14,7 @@ class AuthController extends Controller {
     public function register(RegisterRequest $request) {
 
         $validatedData = $request->validated();
-
+        
 
         $user = User::create([
             'first_name' => $validatedData['first_name'],
@@ -21,7 +22,7 @@ class AuthController extends Controller {
             'mail'       => $validatedData['mail'],
             'birthdate'  => $validatedData['birthdate'],
             'password'   => $validatedData['password'],
-            'role'       => 0, // Par défaut, on attribue le rôle "Utilisateur" (0)
+            'role'       => 1, // Par défaut, on attribue le rôle "Utilisateur" (1)
         ]);
 
        
@@ -40,6 +41,7 @@ class AuthController extends Controller {
 
 
     public function login(LoginRequest $request) {
+
         // On récupère le mail et le mot de passe validés dans LoginRequest
         $identification = $request->validated();
 
