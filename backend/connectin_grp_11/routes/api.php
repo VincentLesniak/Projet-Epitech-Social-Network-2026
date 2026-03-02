@@ -67,5 +67,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/users/{user}', [UserController::class, 'update']);
     # D
     Route::delete('/users/{user}', [UserController::class, 'destroy']);
+    // suppression de la pdp
+    Route::delete('/users/{user}/profil-pic', [UserController::class, 'deleteProfilPic']);
     
 });
