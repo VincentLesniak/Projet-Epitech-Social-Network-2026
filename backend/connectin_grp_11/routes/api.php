@@ -11,7 +11,7 @@ Route::get('/user', function (Request $request) {
 })->middleware(['auth:sanctum', CheckBanned::class]);
 
 #region Auth
-Route::middleware(['auth:sanctum', CheckBanned::class])->group(function () {
+Route::middleware( CheckBanned::class)->group(function () {
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);});
 
