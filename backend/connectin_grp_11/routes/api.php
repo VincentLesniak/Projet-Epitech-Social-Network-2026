@@ -8,14 +8,16 @@ use App\Http\Controllers\UserController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
-})->middleware('auth:sanctum');
+})->middleware(['auth:sanctum', CheckBanned::class]);
 
 #region Auth
+Route::middleware(['auth:sanctum', CheckBanned::class])->group(function () {
 Route::post('/register', [AuthController::class, 'register']);
-Route::post('/login', [AuthController::class, 'login']);
+Route::post('/login', [AuthController::class, 'login']);});
+
 
 // Le groupe protégé par "auth:sanctum", tout ce qui se fait avec la nécessité d'être connécté se fait ici
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware(['auth:sanctum', CheckBanned::class])->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
 });
 #endregion
@@ -58,7 +60,7 @@ Route::get('comments/{comment}', [\App\Http\Controllers\CommentController::class
 
 
 #region Users
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware(['auth:sanctum', CheckBanned::class])->group(function () {
     # C
     Route::get('/users', [UserController::class, 'index']);
     # R
