@@ -1,4 +1,5 @@
 <?php
+
 use Illuminate\Http\Request;
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
@@ -67,5 +68,4 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/users/{user}', [UserController::class, 'update']);
     # D
     Route::delete('/users/{user}', [UserController::class, 'destroy']);
-    
 });

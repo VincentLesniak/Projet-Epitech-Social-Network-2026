@@ -1,7 +1,77 @@
+import { useState, useEffect } from "react";
+import axios from "./api/axios";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 
 const Profil = () => {
+  const [formData, setFormData] = useState({
+    first_name: "",
+    last_name: "",
+  });
+  const [userId, setUserId] = useState(null);
+
+  // NOUVEAU : État pour gérer les messages affichés à l'écran
+  const [feedback, setFeedback] = useState({ type: "", message: "" });
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const response = await axios.get("/user");
+        setUserId(response.data.id);
+
+        setFormData({
+          first_name: response.data.first_name || "",
+          last_name: response.data.last_name || "",
+        });
+      } catch (error) {
+        console.error("Erreur lors de la récupération de l'utilisateur", error);
+      }
+    };
+
+    fetchUser();
+  }, []);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setFeedback({ type: "", message: "" }); // On réinitialise les messages au clic
+
+    try {
+      const response = await axios.put(`/users/${userId}`, formData);
+
+      // On affiche le message de succès à l'écran
+      setFeedback({
+        type: "success",
+        message: response.data.message || "Profil mis à jour avec succès !",
+      });
+      console.log("Nouvelles données :", response.data.data);
+    } catch (error) {
+      if (error.response?.status === 422) {
+        setFeedback({
+          type: "error",
+          message: "Certains champs sont invalides.",
+        });
+        console.log("Erreur de validation :", error.response.data.errors);
+      } else if (error.response?.status === 403) {
+        setFeedback({
+          type: "error",
+          message: "Vous n'avez pas l'autorisation de modifier ce profil.",
+        });
+      } else {
+        setFeedback({
+          type: "error",
+          message: "Une erreur serveur est survenue.",
+        });
+      }
+    }
+  };
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
   const inputStyle =
     "w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all text-sm bg-slate-50";
   const labelStyle = "text-[10px] font-bold text-slate-400 uppercase ml-1 mb-1";
@@ -15,7 +85,7 @@ const Profil = () => {
           <div className="h-32 bg-gradient-to-r from-blue-500 to-blue-700"></div>
 
           <div className="px-8 pb-8">
-            <form action="profil" className="flex flex-col">
+            <form onSubmit={handleSubmit} className="flex flex-col">
               <div className="relative flex flex-col items-center -mt-16 mb-8">
                 <div className="relative group">
                   <img
@@ -38,6 +108,19 @@ const Profil = () => {
                 </p>
               </div>
 
+              {/* NOUVEAU : Affichage des messages de succès ou d'erreur */}
+              {feedback.message && (
+                <div
+                  className={`p-4 mb-6 rounded-xl text-sm font-semibold text-center ${
+                    feedback.type === "success"
+                      ? "bg-green-100 text-green-700"
+                      : "bg-red-100 text-red-700"
+                  }`}
+                >
+                  {feedback.message}
+                </div>
+              )}
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                 <div className="flex flex-col">
                   <label className={labelStyle}>Prénom</label>
@@ -45,11 +128,21 @@ const Profil = () => {
                     type="text"
                     placeholder="Prénom"
                     className={inputStyle}
+                    name="first_name"
+                    value={formData.first_name}
+                    onChange={handleChange}
                   />
                 </div>
                 <div className="flex flex-col">
                   <label className={labelStyle}>Nom</label>
-                  <input type="text" placeholder="Nom" className={inputStyle} />
+                  <input
+                    type="text"
+                    placeholder="Nom"
+                    className={inputStyle}
+                    name="last_name"
+                    value={formData.last_name}
+                    onChange={handleChange}
+                  />
                 </div>
               </div>
 
