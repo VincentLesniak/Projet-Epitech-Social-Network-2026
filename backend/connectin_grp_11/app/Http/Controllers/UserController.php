@@ -30,6 +30,9 @@ class UserController extends Controller
         // Gate lit la règle 'view' dans UserPolicy sur le profil $user.
         Gate::authorize('view', $user);
 
+        //récupère les group dont l'utilisateur fait partie
+        $user->groups;
+
         // Si le gate est passé, le code continue ici et le profil trouvé est renvoyé
         return response()->json([
             'message' => 'Profil trouvé',
