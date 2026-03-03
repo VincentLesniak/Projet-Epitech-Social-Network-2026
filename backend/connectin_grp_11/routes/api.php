@@ -11,9 +11,10 @@ Route::get('/user', function (Request $request) {
 })->middleware(['auth:sanctum', CheckBanned::class]);
 
 #region Auth
-Route::middleware( CheckBanned::class)->group(function () {
-Route::post('/register', [AuthController::class, 'register']);
-Route::post('/login', [AuthController::class, 'login']);});
+Route::middleware(CheckBanned::class)->group(function () {
+    Route::post('/register', [AuthController::class, 'register']);
+    Route::post('/login', [AuthController::class, 'login']);
+});
 
 
 // Le groupe protégé par "auth:sanctum", tout ce qui se fait avec la nécessité d'être connécté se fait ici
@@ -32,13 +33,14 @@ Route::middleware(['auth:sanctum', CheckBanned::class])->group(function () {
     Route::put('posts/{post}', [\App\Http\Controllers\PostController::class, 'update']);
     //delete un post
     Route::delete('posts/{post}', [\App\Http\Controllers\PostController::class, 'destroy']);
+    // route pour récupérer les posts
+    Route::get('posts', [\App\Http\Controllers\PostController::class, 'index']);
+
+    // montre un post spécifique
+    Route::get('posts/{post}', [\App\Http\Controllers\PostController::class, 'show']);
 });
 
-// route pour récupérer les posts
-Route::get('posts', [\App\Http\Controllers\PostController::class, 'index']);
 
-// montre un post spécifique
-Route::get('posts/{post}', [\App\Http\Controllers\PostController::class, 'show']);
 #endregion
 
 #region comments
@@ -49,14 +51,15 @@ Route::middleware(['auth:sanctum', CheckBanned::class])->group(function () {
     Route::put('comments/{comment}', [\App\Http\Controllers\CommentController::class, 'update']);
     // delete un commentaire
     Route::delete('comments/{comment}', [\App\Http\Controllers\CommentController::class, 'destroy']);
+    // route pour récupérer les commentaires
+    Route::get('comments', [\App\Http\Controllers\CommentController::class, 'index']);
+
+    // montre un commentaire spécifique
+    Route::get('comments/{comment}', [\App\Http\Controllers\CommentController::class, 'show']);
+    #endregion
+
 });
 
-// route pour récupérer les commentaires
-Route::get('comments', [\App\Http\Controllers\CommentController::class, 'index']);
-
-// montre un commentaire spécifique
-Route::get('comments/{comment}', [\App\Http\Controllers\CommentController::class, 'show']);
-#endregion
 
 
 #region Users
