@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Title from "./components/Title";
 import Footer from "./components/Footer";
 import api from "./api/axios";
-import { useNotification } from './components/NotificationContext';
+import { useNotification } from "./components/NotificationContext";
 
 const AuthManager = () => {
   const navigate = useNavigate();
@@ -37,6 +37,7 @@ const AuthManager = () => {
         localStorage.setItem("ACCESS_TOKEN", response.data.token);
         console.log("Connecté avec succès !", response.data);
         navigate("/actuality");
+        notify("Bienvenu sur Connect'in!");
       }
     } catch (err) {
       setError("Identifiants incorrects.");
@@ -71,13 +72,15 @@ const AuthManager = () => {
 
         console.log("Token stocké, redirection vers /Log...");
         setMode("login");
-        alert("Inscription réussie ! Vous pouvez maintenant vous connecter.");
+        notify("Inscription réussie ! Vous pouvez maintenant vous connecter.");
       }
     } catch (err) {
       if (err.response && err.response.status === 422) {
         const errorMessages = Object.values(err.response.data.errors).flat();
         setError(errorMessages[0]);
       } else {
+        notify("Inscription echoué! Veuillez réessayer.");
+
         setError("Une erreur est survenue lors de l'inscription.");
       }
       console.error("Erreur attrapée par le catch :", err);
@@ -141,28 +144,7 @@ const AuthManager = () => {
                     S'inscrire
                   </span>
                 </button>
-                <button
-                  type="button"
-                  onClick={() => setMode("forgot")}
-                  className="text-xs text-slate-400 hover:underline"
-                >
-                  Mot de passe oublié ?
-                </button>
               </div>
-            </form>
-          ) : /* FORMULAIRE DE MOT DE PASSE OUBLIÉ */
-          mode === "forgot" ? (
-            <form className="flex flex-col gap-5">
-              <div className="text-center mb-4">
-                <h2 className="text-xl font-bold">Mot de passe oublié</h2>
-              </div>
-              <button
-                type="button"
-                onClick={() => setMode("login")}
-                className={btnLink}
-              >
-                Retour
-              </button>
             </form>
           ) : (
             /* FORMULAIRE D'INSCRIPTION */
