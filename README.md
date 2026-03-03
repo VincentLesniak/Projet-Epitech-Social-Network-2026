@@ -72,10 +72,8 @@ L'application permet aux utilisateurs de s'inscrire, de publier des posts (avec 
 
 ## Documentation API & Tests
 
-Pour tester l'API via **Postman**, veillez à configurer les éléments suivants :
-```json
-//metre le json de postman 🧑‍🏭
-```
+Pour tester l'API via **Postman**, importer dans postman :
+[fichier postman](postman.json)
 
 ---
 
