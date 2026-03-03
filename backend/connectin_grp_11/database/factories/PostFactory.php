@@ -16,4 +16,10 @@ class PostFactory extends Factory
             'group_id' => null, // Sera rempli par le Seeder
         ];
     }
+    public function anonymous(): static
+    {
+        return $this->state(fn(array $attributes) => [
+            'user_id' => null,
+        ]);
+    }
 }
