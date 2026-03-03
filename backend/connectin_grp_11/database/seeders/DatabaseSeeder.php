@@ -12,10 +12,9 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        // Créer 10 utilisateurs
+        // On crée les users et on les stocke dans une variable
         $users = User::factory(10)->create();
 
-        // Créer quelques groupes manuellement (car la clé est un nom)
         $groups = collect(['Laravel France', 'React Devs', 'Gaming Area'])->map(function ($name) {
             return Group::create([
                 'group_name' => $name,
@@ -23,30 +22,50 @@ class DatabaseSeeder extends Seeder
             ]);
         });
 
-        // Créer des posts pour chaque utilisateur
-        $users->each(function ($user) use ($groups) {
+        // On passe la variable $users existante aux boucles
+        $users->each(function ($user) use ($groups, $users) {
             $posts = Post::factory(3)->create([
                 'user_id' => $user->id,
-                'group_id' => $groups->random()->group_name, // On assigne un groupe aléatoire
+                'group_id' => $groups->random()->group_name,
             ]);
 
-            // Ajouter des likes et des commentaires sur ces posts
-            $posts->each(function ($post) use ($user) {
-                // Créer 2 commentaires par post
+            $posts->each(function ($post) use ($users) {
+                // COMMENTAIRES
                 Comment::factory(2)->create([
                     'post_id' => $post->id,
-                    'user_id' => User::all()->random()->id,
+                    // ON UTILISE LA VARIABLE $users DÉJÀ EN MÉMOIRE
+                    'user_id' => $users->random()->id,
                 ]);
 
-                // Ajouter des likes aléatoires (table pivot liked)
+                // LIKES
+                // On tire au sort des IDs parmi la collection existante
                 $post->likers()->attach(
-                    User::all()->random(rand(1, 5))->pluck('id')
+                    $users->random(rand(1, 5))->pluck('id')
                 );
             });
 
-            // Faire rejoindre des groupes aux utilisateurs (table pivot user_groups)
+            // GROUPES
             $user->groups()->attach(
                 $groups->random(rand(1, 2))->pluck('group_name')
+            );
+        });
+    }
+
+    /**
+     * Fonction helper pour éviter la répétition de code pour les likes/commentaires
+     */
+    private function seedInteractions($posts, $users)
+    {
+        $posts->each(function ($post) use ($users) {
+            // Commentaires par des users aléatoires
+            Comment::factory(2)->create([
+                'post_id' => $post->id,
+                'user_id' => $users->random()->id,
+            ]);
+
+            // Likes via la table pivot
+            $post->likers()->attach(
+                $users->random(rand(1, 5))->pluck('id')
             );
         });
     }
