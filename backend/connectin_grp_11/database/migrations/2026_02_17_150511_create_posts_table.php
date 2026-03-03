@@ -18,7 +18,7 @@ return new class extends Migration {
             // le lien de la photo
             $table->string('post_picture', 255)->nullable();
             // Relation avec Users (clé étrangère classique)
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('user_id')->nullable()->constrained()->onDelete('set null');
             // Relation avec Groups (attention : on pointe vers un string, pas un id !)
             $table->string('group_id', 50)->nullable();
             // On définit la clé étrangère manuellement pour le champ group_id
