@@ -36,7 +36,7 @@ const Addpost = ({ onPostCreated, user }) => {
       setMessage("");
     } catch (error) {
       console.error("Erreur détails:", error.response?.data);
-      alert("Erreur lors de la publication.");
+      notify("Erreur lors de la publication.");
     } finally {
       setIsSubmitting(false);
     }

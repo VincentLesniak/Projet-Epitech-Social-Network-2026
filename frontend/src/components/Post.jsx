@@ -95,7 +95,6 @@ const Post = ({ data, currentUser, onDeleteSuccess }) => {
           </div>
         </div>
 
-        {/* ACTIONS AUTEUR */}
         {isAuthor && (
           <div className="flex gap-1">
             <button
@@ -187,7 +186,14 @@ const Post = ({ data, currentUser, onDeleteSuccess }) => {
           <div className="space-y-4 mt-4">
             {localComments.length > 0 ? (
               localComments.map((comment) => (
-                <Comment key={comment.id} data={comment} />
+                <Comment
+                  key={comment.id}
+                  data={comment}
+                  currentUser={currentUser}
+                  onDeleteSuccess={(id) =>
+                    setLocalComments(localComments.filter((c) => c.id !== id))
+                  }
+                />
               ))
             ) : (
               <p className="text-center text-slate-400 text-xs py-4 italic">
