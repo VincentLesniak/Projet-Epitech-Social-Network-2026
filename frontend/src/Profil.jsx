@@ -109,11 +109,17 @@ const Profil = () => {
               <div className="relative flex flex-col items-center -mt-16 mb-8">
                 <div className="relative group">
                   <img
-                    src="https://placehold.co/120"
+                    src={
+                      formData.profil_pic_url
+                        ? formData.profil_pic_url
+                        : formData.profil_pic
+                          ? `http://localhost:8000/storage/${formData.profil_pic}`
+                          : `https://ui-avatars.com/api/?name=${formData.first_name}+${formData.last_name}&background=random`
+                    }
                     alt="Profil"
                     className="w-32 h-32 rounded-full border-4 border-white shadow-lg object-cover bg-white"
                   />
-                  <label className="absolute inset-0 flex items-center justify-center bg-black/40 rounded-full opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
+                  <label className="absolute inset-0 flex items-center justify-center bg-black/40 rounded-full opacity-0 transition-opacity">
                     <span className="text-white text-xs font-bold">
                       Changer
                     </span>

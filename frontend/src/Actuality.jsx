@@ -8,8 +8,8 @@ import Post from "./components/Post";
 const Actuality = () => {
   const [posts, setPosts] = useState([]);
   const [currentUser, setCurrentUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  // Récupération de user
   useEffect(() => {
     axios
       .get("/user")
@@ -17,11 +17,10 @@ const Actuality = () => {
         setCurrentUser(res.data);
       })
       .catch((err) => {
-        console.error("Erreur lors de la récupération de l'utilisateur :", err);
+        console.error("Erreur utilisateur :", err);
       });
   }, []);
 
-  // Récupération des posts
   useEffect(() => {
     const fetchPosts = async () => {
       try {
@@ -29,15 +28,27 @@ const Actuality = () => {
         setPosts(response.data);
       } catch (error) {
         console.error("Impossible de charger les posts :", error);
+      } finally {
+        setLoading(false);
       }
     };
-
     fetchPosts();
   }, []);
 
-  // maj de la liste après création d'un post
   const handlePostCreated = (newPost) => {
     setPosts([newPost, ...posts]);
+  };
+
+  const handleDeletePost = (postId) => {
+    setPosts(posts.filter((post) => post.id !== postId));
+  };
+
+  const handleUpdatePost = (postId, newMessage) => {
+    setPosts(
+      posts.map((post) =>
+        post.id === postId ? { ...post, message: newMessage } : post,
+      ),
+    );
   };
 
   return (
@@ -57,11 +68,21 @@ const Actuality = () => {
         </section>
 
         <section className="space-y-6">
-          {posts.map((post) => (
-            <Post key={post.id} data={post} currentUser={currentUser} />
-          ))}
-
-          {posts.length === 0 && (
+          {loading ? (
+            <p className="text-center text-slate-400 py-10">
+              Chargement du flux...
+            </p>
+          ) : posts.length > 0 ? (
+            posts.map((post) => (
+              <Post
+                key={post.id}
+                data={post}
+                currentUser={currentUser}
+                onDeleteSuccess={handleDeletePost}
+                onUpdateSuccess={handleUpdatePost}
+              />
+            ))
+          ) : (
             <p className="text-center text-slate-400 py-10">
               Aucun message à afficher.
             </p>
