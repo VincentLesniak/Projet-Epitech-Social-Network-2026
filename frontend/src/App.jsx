@@ -5,6 +5,7 @@ import Profil from "./Profil";
 import Groupscreate from "./Groupscreate";
 import Actuality from "./Actuality";
 import Groupsactuality from "./Groupsactuality";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 const ScrollToTop = () => {
   const { pathname } = useLocation();
@@ -18,13 +19,45 @@ function App() {
   return (
     <div className="antialiased text-slate-900 font-sans">
       <ScrollToTop />
+      {/* Routes public */}
+
       <Routes>
         <Route path="/" element={<Log />} />
         <Route path="/Log" element={<Log />} />
-        <Route path="/Profil" element={<Profil />} />
-        <Route path="/Groupscreate" element={<Groupscreate />} />
-        <Route path="/Actuality" element={<Actuality />} />
-        <Route path="/Groupsactuality" element={<Groupsactuality />} />
+
+        {/* Routes protégées */}
+        <Route
+          path="/Profil"
+          element={
+            <ProtectedRoute>
+              <Profil />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/Groupscreate"
+          element={
+            <ProtectedRoute>
+              <Groupscreate />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/Actuality"
+          element={
+            <ProtectedRoute>
+              <Actuality />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/Groupsactuality"
+          element={
+            <ProtectedRoute>
+              <Groupsactuality />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
     </div>
   );

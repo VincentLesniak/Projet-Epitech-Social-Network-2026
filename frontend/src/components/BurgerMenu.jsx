@@ -36,7 +36,7 @@ const BurgerMenu = () => {
           {[
             { to: "/Actuality", label: "Fil d'actualité" },
             { to: "/profil", label: "Profil" },
-            { to: "/Groupscreate", label: "Créer un Groupe" },
+            // { to: "/Groupscreate", label: "Créer un Groupe" },
           ].map((item) => (
             <li key={item.to} className="px-2">
               <Link to={item.to} onClick={closeMenu} className="group">
@@ -52,7 +52,7 @@ const BurgerMenu = () => {
 
           <div className="my-2 border-t border-slate-50"></div>
 
-          <li className="px-3 py-1 text-xs font-semibold text-slate-400 uppercase tracking-wider">
+          {/* <li className="px-3 py-1 text-xs font-semibold text-slate-400 uppercase tracking-wider">
             Mes Groupes
           </li>
 
@@ -78,7 +78,7 @@ const BurgerMenu = () => {
             >
               Déconnexion
             </button>
-          </li>
+          </li> */}
         </ul>
       )}
     </nav>
