@@ -70,8 +70,10 @@ Route::middleware(['auth:sanctum', CheckBanned::class])->group(function () {
     Route::get('/users/{user}', [UserController::class, 'show']);
     # U
     Route::put('/users/{user}', [UserController::class, 'update']);
-    # D
-    Route::delete('/users/{user}', [UserController::class, 'destroy']);
     // suppression de la pdp
     Route::delete('/users/{user}/profil-pic', [UserController::class, 'deleteProfilPic']);
+    // D soft delete
+    Route::delete('/users/{user}', [UserController::class, 'destroy']);
+    //hard delete
+    Route::delete('/users/{user}/force', [UserController::class, 'forceDestroy']);
 });
