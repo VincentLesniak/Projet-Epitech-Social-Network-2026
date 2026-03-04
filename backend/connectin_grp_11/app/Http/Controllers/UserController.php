@@ -93,19 +93,6 @@ class UserController extends Controller
         ], 200);
     }
 
-    public function destroy(User $user)
-    {
-        // gate de lit la règle 'delete' de UserPolicy par rapport à la cible $user
-        Gate::authorize('delete', $user);
-
-        // gate a dit oui, on efface l'utilisateur de la base de données.
-        $user->delete();
-
-        return response()->json([
-            'message' => 'Le compte a été définitivement supprimé.'
-        ], 200);
-    }
-
     public function deleteProfilPic(User $user)
     {
 
@@ -121,5 +108,21 @@ class UserController extends Controller
             'message' => 'Photo de profil supprimée avec succès',
             'data' => $user
         ], 200);
+    }
+
+    #soft delete
+    public function destroy(User $user) {
+        $user->delete(); 
+        return response()->json([
+            'message' => 'Compte supprimé. Vos posts sont conservés.'
+        ]);
+    }
+
+    #hard delete
+    public function forceDestroy(User $user) {
+        $user->forceDelete(); 
+        return response()->json([
+            'message' => 'Le compte et les posts ont été définitivement supprimés.'
+        ]);
     }
 }
