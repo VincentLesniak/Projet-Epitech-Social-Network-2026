@@ -66,7 +66,7 @@ const BurgerMenu = () => {
                 Epitech
               </button>
             </Link>
-          </li>
+          </li> */}
 
           <div className="my-2 border-t border-slate-100"></div>
 
@@ -78,7 +78,7 @@ const BurgerMenu = () => {
             >
               Déconnexion
             </button>
-          </li> */}
+          </li>
         </ul>
       )}
     </nav>
