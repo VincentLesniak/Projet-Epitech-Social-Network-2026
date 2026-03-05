@@ -18,7 +18,7 @@ return new class extends Migration {
             // Relation avec Posts (clé étrangère classique)
             $table->foreignId('post_id')->constrained('posts')->onDelete('cascade');
             // Clé étrangère vers l'auteur du commentaire
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
             // Laravel gère created_at et updated_at
             $table->timestamps(); 
         });

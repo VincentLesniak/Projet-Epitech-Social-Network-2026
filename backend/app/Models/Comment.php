@@ -4,8 +4,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Comment extends Model
-{
+class Comment extends Model {
     // On indique que ce modèle utilise les factories pour les tests et le seeding
     use HasFactory;
     // On autorise le remplissage de ces colonnes
@@ -16,14 +15,12 @@ class Comment extends Model
         ];
 
     // Relation : Un commentaire appartient à un utilisateur
-    public function user()
-    {
+    public function user() {
         return $this->belongsTo(User::class);
     }
 
     // Relation : Un commentaire appartient à un post
-    public function post()
-    {
+    public function post() {
         return $this->belongsTo(Post::class);
     }
 }

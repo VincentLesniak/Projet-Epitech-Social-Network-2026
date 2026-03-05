@@ -1,12 +1,12 @@
 import { useState } from "react";
-import api from "../api/axios";
-import { useNavigate } from "react-router-dom";
-import { useNotification } from "./NotificationContext";
 
-const DeleteAccountModal = ({ isOpen, onClose }) => {
+const DeleteAccountModal = ({
+  isOpen,
+  onClose,
+  onSoftDelete,
+  onHardDelete,
+}) => {
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
-  const { notify } = useNotification();
 
   if (!isOpen) return null;
 
@@ -20,15 +20,13 @@ const DeleteAccountModal = ({ isOpen, onClose }) => {
 
     setLoading(true);
     try {
-      // On envoie le type de suppression au backend (full ou partial)
-      await api.delete("/user/delete", { data: { mode: type } });
-
-      localStorage.removeItem("ACCESS_TOKEN");
-      notify("Votre compte a été supprimé. Au plaisir de vous revoir !");
-      navigate("/Log");
+      if (type === "partial") {
+        await onSoftDelete();
+      } else {
+        await onHardDelete();
+      }
     } catch (error) {
-      console.error("Erreur lors de la suppression :", error);
-      notify("Une erreur est survenue.");
+      console.error(error);
     } finally {
       setLoading(false);
     }
