@@ -110,19 +110,32 @@ class UserController extends Controller
         ], 200);
     }
 
-    #soft delete
+
     public function destroy(User $user) {
-        $user->delete(); 
+        // gate vérifie les polocies et applique les droits 
+        Gate::authorize('delete', $user);
+        // retire les likes de l'user
+        $user->likedPosts()->detach(); 
+        // change la définition du lien avec les posts pour les rendre orphelins
+        $user->posts()->update(['user_id' => null]);
+        $user->comments()->update(['user_id' => null]);
+        // destruction de l'utilisateur définitive en gardant ses posts
+        $user->delete();
+        
         return response()->json([
-            'message' => 'Compte supprimé. Vos posts sont conservés.'
+            'message' => 'Compte supprimé définitivement. Vos posts et commentaires ont été conservés.'
         ]);
     }
 
-    #hard delete
     public function forceDestroy(User $user) {
-        $user->forceDelete(); 
+        Gate::authorize('delete', $user);
+        $user->likedPosts()->detach(); 
+        $user->posts()->delete(); 
+        $user->comments()->delete(); 
+        $user->delete(); 
+        
         return response()->json([
-            'message' => 'Le compte et les posts ont été définitivement supprimés.'
+            'message' => 'Compte et contenu définitivement supprimés.'
         ]);
     }
 }
