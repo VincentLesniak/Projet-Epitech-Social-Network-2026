@@ -6,8 +6,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-class Post extends Model
-{
+class Post extends Model {
     // On indique que ce modèle utilise les factories pour les tests et le seeding
     use HasFactory;
     // On autorise le remplissage de ces colonnes
@@ -18,22 +17,18 @@ class Post extends Model
         'group_id'
     ];
     // Indique que un post appartient à un utilisateur
-    public function user(): BelongsTo|null
-    {
+    public function user(): BelongsTo|null {
         return $this->belongsTo(User::class);
     }
     // Indique que un post appartient à un groupe
-    public function group(): BelongsTo
-    {
+    public function group(): BelongsTo {
         return $this->belongsTo(Group::class, 'group_id', 'group_name');
     }
     // Indique que un post peut avoir plusieurs commentaires
-    public function comments(): HasMany
-    {
+    public function comments(): HasMany {
         return $this->hasMany(Comment::class);
     }
-    public function likers(): BelongsToMany
-    {
+    public function likers(): BelongsToMany {
         return $this->belongsToMany(User::class, 'liked', 'post_id', 'user_id');
     }
 }

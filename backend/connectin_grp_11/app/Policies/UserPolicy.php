@@ -34,4 +34,8 @@ class UserPolicy {
         // Pareil, on ne peut modifier que son propre compte
         return $user->id === $model->id;
     }
+
+    public function forceDelete(User $user, User $model): bool{
+        return $user->id === $model->id;
+    }
 }
