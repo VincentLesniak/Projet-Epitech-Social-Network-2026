@@ -15,6 +15,7 @@ const Profil = () => {
     profil_pic_url: null,
   });
 
+  const [userId, setUserId] = useState(null);
   const [feedback, setFeedback] = useState({ type: "", message: "" });
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
@@ -27,6 +28,7 @@ const Profil = () => {
     axios
       .get("/user")
       .then((res) => {
+        setUserId(res.data.id);
         setFormData({
           ...formData,
           first_name: res.data.first_name || "",
@@ -59,17 +61,21 @@ const Profil = () => {
     setFeedback({ type: "", message: "" });
 
     const data = new FormData();
+    data.append("_method", "PUT");
     data.append("first_name", formData.first_name);
     data.append("last_name", formData.last_name);
     data.append("birthdate", formData.birthdate);
     data.append("mail", formData.mail);
-    if (formData.password) data.append("password", formData.password);
+
+    if (formData.password) {
+      data.append("password", formData.password);
+    }
     if (formData.profil_pic instanceof File) {
       data.append("profil_pic", formData.profil_pic);
     }
 
     try {
-      await axios.post("/user/update?_method=PUT", data, {
+      await axios.post(`/users/${userId}`, data, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       setFeedback({
@@ -78,6 +84,34 @@ const Profil = () => {
       });
     } catch (err) {
       setFeedback({ type: "error", message: "Erreur lors de la mise à jour." });
+    }
+  };
+
+  const handleSoftDelete = async () => {
+    try {
+      await axios.delete(`/users/${userId}`);
+      localStorage.removeItem("ACCESS_TOKEN");
+      window.location.href = "/Log";
+    } catch (error) {
+      setFeedback({
+        type: "error",
+        message: "Impossible de désactiver le compte.",
+      });
+      setIsDeleteModalOpen(false);
+    }
+  };
+
+  const handleHardDelete = async () => {
+    try {
+      await axios.delete(`/users/${userId}/force`);
+      localStorage.removeItem("ACCESS_TOKEN");
+      window.location.href = "/Log";
+    } catch (error) {
+      setFeedback({
+        type: "error",
+        message: "Impossible de supprimer définitivement le compte.",
+      });
+      setIsDeleteModalOpen(false);
     }
   };
 
@@ -233,6 +267,8 @@ const Profil = () => {
       <DeleteAccountModal
         isOpen={isDeleteModalOpen}
         onClose={() => setIsDeleteModalOpen(false)}
+        onSoftDelete={handleSoftDelete}
+        onHardDelete={handleHardDelete}
       />
     </div>
   );
