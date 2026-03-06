@@ -43,7 +43,7 @@ L'application permet aux utilisateurs de s'inscrire, de publier des posts (avec 
 1.  Ouvrez un terminal dans le dossier `backend` :
     ```bash
     composer install
-    cp .env_example .env
+    cp .env_exemple .env
     php artisan key:generate
     ```
 2.  Configurez votre base de données dans le fichier `.env`.
