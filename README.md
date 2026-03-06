@@ -18,8 +18,7 @@ L'application permet aux utilisateurs de s'inscrire, de publier des posts (avec 
 * **Interactions :** Système de "J'aime" (Like/Unlike) sur les publications via une table pivot.
 * **Profils Utilisateurs :** Mise à jour des informations personnelles avec validation.
 
-
-<img width="1920" height="1080" alt="Capture_decran_2026-03-06" src="https://github.com/user-attachments/assets/6c90b852-31a0-49db-b6ac-46584450b64d" />
+<img width="955" height="989" alt="image" src="https://github.com/user-attachments/assets/c7e45e87-ba03-40f8-972d-0471cc9fbb05" />
 <img width="1897" height="989" alt="image" src="https://github.com/user-attachments/assets/2f27bfd6-1359-4c10-a708-36ae1bd89ecd" />
 <img width="1920" height="1080" alt="Capture_decran_2026-03-06_141106" src="https://github.com/user-attachments/assets/d5be3725-7d75-4eab-81da-6e9696a498ee" />
 
